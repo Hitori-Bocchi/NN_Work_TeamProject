@@ -120,10 +120,39 @@ def progressbar(n_step, n_total):
 
 # 2.1
 # your code here 
+train_data = pd.read_csv('kmnist_train.csv')    #这个是panda的dataframe，我直接是把文件放在本地跑的，和ed上面的目录不一样
+#上传的时候我会修改相对路径
 
+images = train_data.iloc[:, :-1].values     #提取图像数据和标签
+labels = train_data.iloc[:, -1].values      #其实这里不确定，因为他说的是用_kmnist训练数据，但是又说
+                                            #utilize kmnist_test.csv in question 2.3.4 only  所以我暂时当作他是对的
+
+image_0 = images[labels == 0][0].reshape(28, 28)    # 这里是选择第一个0和第一个1的样本进行可视化
+image_1 = images[labels == 1][0].reshape(28, 28)    #我测试过，会出现模糊的0和1
+
+plt.figure(figsize=(6, 3))
+plt.subplot(1, 2, 1)
+plt.title("Handwritten 0")
+plt.imshow(image_0, cmap='gray')
+plt.subplot(1, 2, 2)
+plt.title("Handwritten 1")
+plt.imshow(image_1, cmap='gray')
+plt.show()
 # 2.2
 # your code here
+#这里就是定义的模型
+model_overfit = tf.keras.Sequential([
+    tf.keras.layers.Dense(100, activation='relu', input_shape=(784,)),
+    tf.keras.layers.Dense(100, activation='relu'),
+    tf.keras.layers.Dense(100, activation='relu'),
+    tf.keras.layers.Dense(100, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
 
+model_overfit.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+X1_train, X1_val, Y1_train, Y1_val = train_test_split(images, labels, test_size=0.3, random_state=42)
+
+history_overfit = model_overfit.fit(X1_train, Y1_train, epochs=2000, batch_size=128, validation_data=(X1_val, Y1_val))
 # 2.2此处要写解释
 
 # 2.3.1
