@@ -111,4 +111,4 @@ y_test = test_data.iloc[:, -1].values
 
 test_loss, test_accuracy = model.evaluate(x_test, y_test)
 print("Test accuracy:", test_accuracy)
-
+# 0：10 Sep 12th修改
